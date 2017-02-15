@@ -463,6 +463,8 @@ def run_MCMC(X, y, sigma2, vs, weights, zs, p0, multi_dim,
         np.savetxt(os.path.join(outdir, title), ww)
         outdir = "spike_slab_results/s_n_s_zs"
         np.savetxt(os.path.join(outdir, title), zz)
+        outdir = "spike_slab_results/s_n_s_p0"
+        np.savetxt(os.path.join(outdir, title), pp)
         outdir = "spike_slab_results/s_n_s_sigma2"
         np.savetxt(os.path.join(outdir, title), ss)
 

@@ -119,14 +119,14 @@ class Testing(object):
             weights = np.zeros(self.multi_dim*self.dim)
             zs = np.zeros(self.dim)
             if self.gen_weights == True:
-                sns = spike_n_slab.run_MCMC(self.X_train, self.y_train, 0.2, 0.2,
+                sns = spike_n_slab.run_MCMC(self.X_train, self.y_train, 0.02, 0.2,
                                          weights, zs, 0.5, 4, 100.0,
                                          prior = 'spike_n_slab',
                                      save_message = 'weights' + str(size))
             sns_weights = np.genfromtxt('spike_slab_results\s_n_s_weights\weights'\
                                 + str(size) + '.csv')
             if self.gen_weights == True:
-                gauss = spike_n_slab.run_MCMC(self.X_train, self.y_train, 0.2,
+                gauss = spike_n_slab.run_MCMC(self.X_train, self.y_train, 0.02,
                                               0.2, weights, zs, 0.5, 4, 100.0,
                                          prior = 'gauss',
                                      save_message = 'gauss_weights' + str(size))
@@ -243,7 +243,8 @@ def fit_GP(xs, ys, std):
     y_minus = y - std
     return y, y_plus, y_minus, x
     
-versus = Testing(sizes = [3, 4, 5, 6, 8, 10, 12, 16, 20], dim = 5, runs = 5)
+#versus = Testing(sizes = [3, 4, 5, 6, 8, 10, 12, 16, 20], dim = 5, runs = 5)
+versus = Testing(sizes = [3, 4], dim = 5, runs = 2)
 mle_std, sns_std, gauss_std, mle_mean, sns_mean, gauss_mean = versus.test_runs()
 mle_out = versus.mean_mle_out
 sns_out = versus.mean_sns_out
@@ -254,30 +255,58 @@ y, y_plus, y_minus, x = fit_GP(xs, mle_out, mle_std)
 y2, y2_plus, y2_minus, x = fit_GP(xs, sns_out, sns_std)
 y3, y3_plus, y3_minus, x = fit_GP(xs, gauss_out, gauss_std)
 
+xs = np.array(xs)
+x = np.array(x)
+xs *= 4
+x *= 4
+
 plt.figure()
 plt.scatter(xs, mle_out + mle_mean, s= 30, alpha=0.6,
                     edgecolor='black', facecolor='b', linewidth=0.75)
 plt.errorbar(xs, mle_out + mle_mean, mle_std, fmt='b.', markersize=10,
-             alpha=0.6)
+             alpha=0.6, label = 'Maximum likelihood')
 plt.scatter(xs, sns_out + sns_mean, s= 30, alpha=0.6,
-                    edgecolor='black', facecolor='r', linewidth=0.75)
+                    edgecolor='black', facecolor='r', linewidth=0.75 )
 plt.errorbar(xs, sns_out + sns_mean, sns_std, fmt='r.', markersize=10,
-             alpha=0.6)
+             alpha=0.6, label = 'Spike and slab prior')
 plt.plot(x, y + mle_mean)
 plt.fill_between(x, y_plus + mle_mean, y_minus + mle_mean, alpha = 0.3)
 plt.plot(x, y2 + sns_mean, color = 'red')
 plt.fill_between(x, y2_plus + sns_mean, y2_minus + sns_mean,
                  alpha = 0.3, color = 'red')
 plt.errorbar(xs, gauss_out + gauss_mean, gauss_std, fmt='g.',
-             markersize=10, alpha=0.6)
+             markersize=10, alpha=0.6, label = 'Gaussian prior')
 plt.plot(x, y3 + gauss_mean, color = 'green')
 plt.fill_between(x, y3_plus + gauss_mean, y3_minus + gauss_mean,
                  alpha = 0.3, color = 'green')
-plt.ylabel('$\mathrm{Number}$' + ' ' + '$\mathrm{of}$' + ' ' + '$x$'+ ' ' +
+plt.plot([0, 80], [np.log(0.0001), np.log(0.0001)], 'k--')
+plt.legend(loc='upper right', shadow=True)
+plt.xlabel('$\mathrm{Number}$' + ' ' + '$\mathrm{of}$' + ' ' + '$x$'+ ' ' +
            '$\mathrm{values}$', fontsize = 20)
-plt.xlabel('$Error$', fontsize = 20)
+plt.ylabel('$\mathrm{log(Error)}$', fontsize = 20)
+plt.xlim(0.0, 80.0) 
 plt.tight_layout()
 plt.savefig('gps.png')
+plt.show()
+
+p0 = np.genfromtxt('spike_slab_results\s_n_s_p0\weights4.csv')
+
+plt.figure()
+plt.hist(p0[1000:], bins = 50, histtype='stepfilled', normed=True,
+            color='b', alpha = 0.7)
+plt.ylabel('$\mathrm{Frequency}$', fontsize = 20)
+plt.xlabel('$p_0$', fontsize = 20)
+plt.tight_layout()
+plt.show()
+
+sig2 = np.genfromtxt('spike_slab_results\s_n_s_sigma2\weights4.csv')
+
+plt.figure()
+plt.hist(sig2[1000:], bins = 50, histtype='stepfilled', normed=True,
+            color='b', alpha = 0.7)
+plt.ylabel('$\mathrm{Frequency}$', fontsize = 20)
+plt.xlabel('$\sigma^2$', fontsize = 20)
+plt.tight_layout()
 plt.show()
     
 '''
