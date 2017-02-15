@@ -437,10 +437,10 @@ def run_MCMC(X, y, sigma2, vs, weights, zs, p0, multi_dim,
     assert prior == 'gauss' or 'spike_n_slab', "unrecognized prior"
 
     if prior == 'gauss':
-        ww, zz, pp, vv, ss = Test.gibbs_chain(10000, est_p0 = False,
+        ww, zz, pp, vv, ss = Test.gibbs_chain(2000, est_p0 = False,
                                               censored = censored)
     elif prior == 'spike_n_slab':
-        ww, zz, pp, vv, ss = Test.gibbs_chain(10000, censored = censored)
+        ww, zz, pp, vv, ss = Test.gibbs_chain(2000, censored = censored)
 
     time = datetime.now().strftime(r"%y%m%d_%H%M")
     title = "run_at_time_{}.csv".format(time)
