@@ -9,7 +9,8 @@ A more technical/complete description can be found in these papers by Hernández
 
 ![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/linreg.gif)
 
-Epsilon is Gaussian noise we add on to each y value. In a Bayesian setting we put a prior on the weights w. The simplest prior is just Gaussian, but 
+y is a vector with our target values in, and X is a matrix with the features associated with each target value. Epsilon is Gaussian noise we add on to data point. 
+In a Bayesian setting we put a prior on the weights w. The simplest prior is just Gaussian, but 
 I'm doing something a bit (okay, maybe a lot!) more complicated, our prior looks like this: 
 
 ![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/s_n_s.gif)
@@ -27,9 +28,19 @@ We also have a prior on z which looks like:
 I.e. a Bernouilli probability distribution. p0 is the a priori proportion of features we think are relevant, so p0 = 0.5 means we think about half of the 
 features will end up being used. The posterior of p0 gives us how many features are model thinks are relevant. 
 
+Notice back in the prior on the weights we had vectors in the dirac delta and gaussian distributions, not scalars. This is because we have 'group sparsity'. 
+We group together the weights for different microbes, for example charge for E.coli and charge for some other bacteria would be jointly zero or Gaussian. 
+In this way we can 'share information' between microbes. If one microbe has loads of data points and it's obvious a certain feature isn't useful for prediction, 
+that feature won't get used on the other microbes too. And the posterior for z will give us the probability that a certain feature is relevant across every 
+microbe, not just one. 
+
+This fancy prior means our posterior distribution is completely incractable, so we have to use MCMC (if you aren't familiar, this is a great intro by Iain
+Murray of Edinburgh Uni.), specifically Gibbs sampling, since the conditional distributions of our variables are tractable. Details are in the appendix of 
+this paper. 
+
 # Toy Dataset
 
-I'm not putting the real dataset on Github since it's not mine! But we can demonstrate the principal using a toy dataset. 
+Okay, enough maths! We can demonstrate the principal using a toy dataset. 
 
 
 
