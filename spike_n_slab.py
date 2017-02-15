@@ -400,7 +400,7 @@ class Spike_N_Slab(object):
                     self.sample_z_i(k)
             if est_p0 == True:
                 self.sample_p0(k = 3.0)
-            self.sample_sigma2(k = 3.0, sigma2_hat = 0.01)
+            self.sample_sigma2(k = 3.0, sigma2_hat = 0.0005)
             self.sample_vs(k = 3.0, vs_hat = 0.5)
             self.sample_w()
             

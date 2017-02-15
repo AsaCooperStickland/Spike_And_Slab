@@ -242,10 +242,22 @@ def fit_GP(xs, ys, std):
     y_plus = y + std
     y_minus = y - std
     return y, y_plus, y_minus, x
-    
-#versus = Testing(sizes = [3, 4, 5, 6, 8, 10, 12, 16, 20], dim = 5, runs = 5)
-versus = Testing(sizes = [3, 4], dim = 5, runs = 2)
-mle_std, sns_std, gauss_std, mle_mean, sns_mean, gauss_mean = versus.test_runs()
+
+new_data = True
+
+if new_data == True:
+    versus = Testing(sizes = [3, 4, 5, 6, 8, 10, 12, 16, 20], dim = 5, runs = 5)
+    mle_std, sns_std, \
+             gauss_std, mle_mean, sns_mean, gauss_mean = versus.test_runs()
+    y_train, X_train, y_test, X_test = get_data()
+    errors = [mle_std, sns_std, gauss_std, mle_mean, sns_mean, gauss_mean, versus]
+    pickle.dump(errors, open('comparison.pickle', 'wb'))
+
+else:
+    load_name = 'comparison.pickle'
+    errors = pickle.load( open( load_name, "rb" ) )
+    mle_std, sns_std, gauss_std, mle_mean, sns_mean, gauss_mean, versus = errors
+
 mle_out = versus.mean_mle_out
 sns_out = versus.mean_sns_out
 gauss_out = versus.mean_gauss_out
@@ -269,16 +281,16 @@ plt.scatter(xs, sns_out + sns_mean, s= 30, alpha=0.6,
                     edgecolor='black', facecolor='r', linewidth=0.75 )
 plt.errorbar(xs, sns_out + sns_mean, sns_std, fmt='r.', markersize=10,
              alpha=0.6, label = 'Spike and slab prior')
-plt.plot(x, y + mle_mean)
-plt.fill_between(x, y_plus + mle_mean, y_minus + mle_mean, alpha = 0.3)
-plt.plot(x, y2 + sns_mean, color = 'red')
-plt.fill_between(x, y2_plus + sns_mean, y2_minus + sns_mean,
-                 alpha = 0.3, color = 'red')
+#plt.plot(x, y + mle_mean)
+#plt.fill_between(x, y_plus + mle_mean, y_minus + mle_mean, alpha = 0.3)
+#plt.plot(x, y2 + sns_mean, color = 'red')
+#plt.fill_between(x, y2_plus + sns_mean, y2_minus + sns_mean,
+#                 alpha = 0.3, color = 'red')
 plt.errorbar(xs, gauss_out + gauss_mean, gauss_std, fmt='g.',
              markersize=10, alpha=0.6, label = 'Gaussian prior')
-plt.plot(x, y3 + gauss_mean, color = 'green')
-plt.fill_between(x, y3_plus + gauss_mean, y3_minus + gauss_mean,
-                 alpha = 0.3, color = 'green')
+#plt.plot(x, y3 + gauss_mean, color = 'green')
+#plt.fill_between(x, y3_plus + gauss_mean, y3_minus + gauss_mean,
+#                 alpha = 0.3, color = 'green')
 plt.plot([0, 80], [np.log(0.0001), np.log(0.0001)], 'k--')
 plt.legend(loc='upper right', shadow=True)
 plt.xlabel('$\mathrm{Number}$' + ' ' + '$\mathrm{of}$' + ' ' + '$x$'+ ' ' +
@@ -287,6 +299,30 @@ plt.ylabel('$\mathrm{log(Error)}$', fontsize = 20)
 plt.xlim(0.0, 80.0) 
 plt.tight_layout()
 plt.savefig('gps.png')
+plt.show()
+
+plt.figure()
+plt.scatter(xs, mle_out + mle_mean, s= 30, alpha=0.6,
+                    edgecolor='black', facecolor='b', linewidth=0.75)
+plt.errorbar(xs, mle_out + mle_mean, mle_std, fmt='b.', markersize=10,
+             alpha=0.6, label = 'Maximum likelihood')
+plt.scatter(xs, sns_out + sns_mean, s= 30, alpha=0.6,
+                    edgecolor='black', facecolor='r', linewidth=0.75 )
+plt.errorbar(xs, sns_out + sns_mean, sns_std, fmt='r.', markersize=10,
+             alpha=0.6, label = 'Spike and slab prior')
+plt.plot(x, y + mle_mean)
+plt.fill_between(x, y_plus + mle_mean, y_minus + mle_mean, alpha = 0.3)
+plt.plot(x, y2 + sns_mean, color = 'red')
+plt.fill_between(x, y2_plus + sns_mean, y2_minus + sns_mean,
+                 alpha = 0.3, color = 'red')
+plt.plot([0, 80], [np.log(0.0001), np.log(0.0001)], 'k--')
+plt.legend(loc='upper right', shadow=True)
+plt.xlabel('$\mathrm{Number}$' + ' ' + '$\mathrm{of}$' + ' ' + '$x$'+ ' ' +
+           '$\mathrm{values}$', fontsize = 20)
+plt.ylabel('$\mathrm{log(Error)}$', fontsize = 20)
+plt.xlim(0.0, 80.0) 
+plt.tight_layout()
+plt.savefig('gps2.png')
 plt.show()
 
 p0 = np.genfromtxt('spike_slab_results\s_n_s_p0\weights4.csv')
