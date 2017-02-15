@@ -289,16 +289,17 @@ plt.errorbar(xs, gauss_out + gauss_mean, gauss_std, fmt='g.',
 #plt.plot(x, y3 + gauss_mean, color = 'green')
 #plt.fill_between(x, y3_plus + gauss_mean, y3_minus + gauss_mean,
 #                 alpha = 0.3, color = 'green')
-plt.plot([0, 100], [np.log(0.0001), np.log(0.0001)], 'v--', linewidth = 3.0,
-         alpha = 0.6)
+plt.plot([0, 100], [np.log(0.0001), np.log(0.0001)], 'm--', linewidth = 3.0,
+         alpha = 0.6, label = 'True Value')
 plt.legend(loc='upper right', shadow=True)
-plt.xlabel('$\mathrm{Number}$' + ' ' + '$\mathrm{of}$' + ' ' + '$x$'+ ' ' +
-           '$\mathrm{values}$', fontsize = 20)
+plt.xlabel('$\mathrm{Number}$' + ' ' + '$\mathrm{of}$' + ' ' +
+           '$\mathrm{data}$'+ ' ' + '$\mathrm{points}$', fontsize = 20)
 plt.ylabel('$\mathrm{log(Error)}$', fontsize = 20)
 plt.xlim(10.0, 82.0)
 plt.ylim(-11, 25)
+plt.xscale('log', basex=2)
 plt.tight_layout()
-plt.savefig('gps.png')
+plt.savefig('figures/errors.png')
 plt.show()
 
 plt.figure()
@@ -315,16 +316,16 @@ plt.fill_between(x, y_plus + mle_mean, y_minus + mle_mean, alpha = 0.3)
 plt.plot(x, y2 + sns_mean, color = 'red')
 plt.fill_between(x, y2_plus + sns_mean, y2_minus + sns_mean,
                  alpha = 0.3, color = 'red')
-plt.plot([0, 100], [np.log(0.0001), np.log(0.0001)], 'v--', linewidth = 3.0,
-         alpha = 0.6)
+plt.plot([0, 100], [np.log(0.0001), np.log(0.0001)], 'm--', linewidth = 3.0,
+         alpha = 0.6, label = 'True Value')
 plt.legend(loc='upper right', shadow=True)
-plt.xlabel('$\mathrm{Number}$' + ' ' + '$\mathrm{of}$' + ' ' + '$x$'+ ' ' +
-           '$\mathrm{values}$', fontsize = 20)
+plt.xlabel('$\mathrm{Number}$' + ' ' + '$\mathrm{of}$' + ' ' +
+           '$\mathrm{data}$'+ ' ' + '$\mathrm{points}$', fontsize = 20)
 plt.ylabel('$\mathrm{log(Error)}$', fontsize = 20)
 plt.xlim(10.0, 82.0)
 plt.ylim(-11, 8)
 plt.tight_layout()
-plt.savefig('gps2.png')
+plt.savefig('figures/errors_gp.png')
 plt.show()
 
 p0 = np.genfromtxt('spike_slab_results\s_n_s_p0\weights4.csv')
