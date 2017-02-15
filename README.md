@@ -53,6 +53,14 @@ included the terms that matter down below:
 This is a pretty simple system, so with enough data points maximum likelihood will give us good results. But if the number of data points is small, the 'nusisance'
 variables x0, x2, x3 are going to get some weight attatched to them and our estimate will not generalise well to new data. This isn't solved by a regular 
 Gaussian prior either. What spike and slab is really good at is utilising the fact that the same features are relevant in every problem. There's going to end up
-being a very high probability that x1 and x4 are relevant, and the others are, or equivalently the probabiblity of z being one for those variables will be
-high (remember zs are shared between x1 and x4 for every y). Don't beleive me? Look at some graphs: 
+being a very high probability that x1 and x4 are relevant, and the others are will have a high probability of being exactly zero, 
+or equivalently the probabiblity of z being one for x1 and x4 will be high (remember zs are shared between x1 and x4 for every y). 
+Don't beleive me? Look at some graphs: 
+
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/errors.png)
+
+On the y axis is the mean error on 200 test data points. Spike and slab is the clear winner, although all methods converge to the true error (0.01^2 = 0.0001) 
+at around 40 data points. Interestingly, a Gaussian prior is at first pretty bad, losing to a MLE, although it eventually overtakes. This is probably because
+our prior is not particularly close to the real weights, so when the model doesn't have much data it sticks pretty close to the prior, giving a rubbish 
+test error. 
 
