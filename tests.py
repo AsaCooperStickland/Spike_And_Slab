@@ -249,10 +249,8 @@ if new_data == True:
     versus = Testing(sizes = [3, 4, 5, 6, 8, 10, 12, 16, 20], dim = 5, runs = 5)
     mle_std, sns_std, \
              gauss_std, mle_mean, sns_mean, gauss_mean = versus.test_runs()
-    y_train, X_train, y_test, X_test = get_data()
     errors = [mle_std, sns_std, gauss_std, mle_mean, sns_mean, gauss_mean, versus]
     pickle.dump(errors, open('comparison.pickle', 'wb'))
-
 else:
     load_name = 'comparison.pickle'
     errors = pickle.load( open( load_name, "rb" ) )

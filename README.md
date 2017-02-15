@@ -34,13 +34,25 @@ In this way we can 'share information' between microbes. If one microbe has load
 that feature won't get used on the other microbes too. And the posterior for z will give us the probability that a certain feature is relevant across every 
 microbe, not just one. 
 
-This fancy prior means our posterior distribution is completely incractable, so we have to use MCMC (if you aren't familiar, this is a great intro by Iain
-Murray of Edinburgh Uni.), specifically Gibbs sampling, since the conditional distributions of our variables are tractable. Details are in the appendix of 
-this paper. 
+This fancy prior means our posterior distribution is completely incractable, so we have to use MCMC (if you aren't familiar, [this](https://www.youtube.com/watch?v=Em6mQQy4wYA&t=2734s) 
+is a great intro by Iain Murray of Edinburgh Uni.), specifically Gibbs sampling, since the conditional distributions of our variables are tractable. Details are 
+in the appendix of [this](http://www.jmlr.org/papers/volume14/hernandez-lobato13a/hernandez-lobato13a.pdf) paper. 
 
 # Toy Dataset
 
-Okay, enough maths! We can demonstrate the principal using a toy dataset. 
+Okay, enough maths! We can demonstrate the principal using a toy dataset. The number of features is set as five, and we have four target variables, and our 
+linear system looks like:
 
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/system.gif)
 
+Notice that the weights are differnt for each target, but in each one only the 2nd and 5th features are actually contributing anything. For clarity I've just
+included the terms that matter down below:
+
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/system_small.gif)
+
+This is a pretty simple system, so with enough data points maximum likelihood will give us good results. But if the number of data points is small, the 'nusisance'
+variables x0, x2, x3 are going to get some weight attatched to them and our estimate will not generalise well to new data. This isn't solved by a regular 
+Gaussian prior either. What spike and slab is really good at is utilising the fact that the same features are relevant in every problem. There's going to end up
+being a very high probability that x1 and x4 are relevant, and the others are, or equivalently the probabiblity of z being one for those variables will be
+high (remember zs are shared between x1 and x4 for every y). Don't beleive me? Look at some graphs: 
 
