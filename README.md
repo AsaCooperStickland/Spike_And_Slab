@@ -69,7 +69,7 @@ MLE. In the papers I mention above you can have > 1000 features, and you really 
 Below is the same but removing the Gaussian prior values, and fitting a Gaussian process to the error for the other two. Mainly just for fun, but since MCMC is pretty 
 expensive in general, you might want the Gaussian process as a good interpolation between two of your sizes.  
 
-![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/errors.png)
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/errors_gp.png)
 
 And we can look at histograms for some of our variables to see if the model can learn them from the data: 
 
