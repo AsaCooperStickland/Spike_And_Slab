@@ -59,8 +59,36 @@ Don't beleive me? Look at some graphs:
 
 ![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/errors.png)
 
-On the y axis is the mean error on 200 test data points. Spike and slab is the clear winner, although all methods converge to the true error (0.01^2 = 0.0001) 
-at around 40 data points. Interestingly, a Gaussian prior is at first pretty bad, losing to a MLE, although it eventually overtakes. This is probably because
+On the y axis is the mean error on 200 test data points, averaged over five runs. The x axis is on a log scale. Since it can share information between the four target variables, spike and slab is the clear winner
+for a small number of data points, although all methods converge to the true error (0.01^2 = 0.0001) at around 40 data points. 
+Interestingly, a Gaussian prior is at first pretty bad, losing to a MLE, although it eventually overtakes. This is probably because
 our prior is not particularly close to the real weights, so when the model doesn't have much data it sticks pretty close to the prior, giving a rubbish 
-test error. 
+test error. 40 data points is pretty small, so why bother with spike and slab? Well when you increase the number of features it performs even better against
+MLE. In the papers I mention above you can have > 1000 features, and you really need a strong regulaizer like a spike and slab prior. 
 
+Below is the same but removing the Gaussian prior values, and fitting a Gaussian process to the error for the other two. Mainly just for fun, but since MCMC is pretty 
+expensive in general, you might want the Gaussian process as a good interpolation between two of your sizes.  
+
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/errors.png)
+
+And we can look at histograms for some of our variables to see if the model can learn them from the data: 
+
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/errors.png)
+
+p0
+
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/errors.png)
+
+sigma2
+
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/errors.png)
+
+Since error is strictly positive I'll just plot it on a log scale for clarity. 
+log(sigma2)
+
+You can explore what the posterior looks like for certain weights, or for zs by looking in 
+
+    spike_slab_results
+
+Samples from the posterior look like weights(number of data points) or gauss_weight(number of data points) for spike and slab or gaussian priors respectively. 
+Just remember to throw out the first 1000 samples when plotting a posterior or finding a mean. 

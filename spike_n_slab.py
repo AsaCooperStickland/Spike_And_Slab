@@ -19,8 +19,6 @@ from scipy.stats import invgamma
 from scipy.stats import beta
 from datetime import datetime
 import os
-
-#from spike_n_slab_utils import load_data
                            
 def find_cens(vec, cens_value):
     
@@ -200,7 +198,7 @@ class Spike_N_Slab(object):
     def fill_in_binary(self):
 
         """
-        Update big list of wheter a weight is zero or one.
+        Update big list of whether a weight is zero or one.
         """
 
         l_zeros = len(self.zeros)
@@ -220,8 +218,6 @@ class Spike_N_Slab(object):
         Theta = np.matrix(self.data)
         Theta_t = np.matrix.transpose(Theta)
         mult = np.zeros(self.d)
-        # 1/vs or vs? This is uncertian - conflicting results in spike and slab paper and Bishop - although if you go by
-        # origional spike n slab (not group one) it *is* 1/vs. 
         mult = mult + 1.0/self.vs
         mult[self.big_zeros] = 10000000.0
         I_vs = mult*np.identity(self.d)
@@ -243,6 +239,8 @@ class Spike_N_Slab(object):
         """
         
         if self.zs[i] == 1.0:
+            # This is all on page 48 (Appendix A) of group feature selection
+            # paper - pretty hard to explain without looking at that. 
             Theta = matrix(self.data)
             Theta_t = matrix.transpose(Theta)
             mult = np.zeros(self.d)
@@ -250,7 +248,7 @@ class Spike_N_Slab(object):
             mult[self.big_zeros] = 0.0
             for j in range(self.multi_dim):
                 mult[i + j*self.g] = 0.0
-                # This is all on page 48 (Appendix A) of group feature selection paper
+                
             A_minusg = mult*np.identity(self.d)
             C_minusg = (self.sigma2*np.identity(self.size) +
                         Theta*A_minusg*Theta_t)
@@ -268,7 +266,7 @@ class Spike_N_Slab(object):
                 s_j = eig_vals[j]
                 e_j = eig_vecs[:, j]
                 temp = y*C_inv*X_g
-                q_j = float(temp*e_j) # this is the other way around to how it's presented in paper but only way for dims to match
+                q_j = float(temp*e_j) 
                 L = (L + 0.5*(q_j**2.0/((1.0/self.vs) + s_j)
                               - np.log(1.0 + self.vs*s_j)))
             L_tot = np.exp(L)
@@ -379,7 +377,7 @@ class Spike_N_Slab(object):
     def gibbs_chain(self, N, est_p0 = True, censored = True, verbose = True):
         
         """
-        Returns a series of Gibbs samples
+        Returns a series of Gibbs samples. We sample each parameter in turn. 
         """
 
         self.__validate_params()
@@ -395,12 +393,13 @@ class Spike_N_Slab(object):
         for i in range(N - 1):
             if censored == True:
                 self.cens_replace()
+            # We only sample need to sample zs for spike and slab prior
             if self.prior == 'spike_n_slab':
                 for k in range(len(self.zs)):
                     self.sample_z_i(k)
             if est_p0 == True:
                 self.sample_p0(k = 3.0)
-            self.sample_sigma2(k = 3.0, sigma2_hat = 0.0005)
+            self.sample_sigma2(k = 3.0, sigma2_hat = 0.0002)
             self.sample_vs(k = 3.0, vs_hat = 0.5)
             self.sample_w()
             
@@ -422,7 +421,7 @@ class Spike_N_Slab(object):
 
 def run_MCMC(X, y, sigma2, vs, weights, zs, p0, multi_dim,
              cens_value, censored = True, prior = 'spike_n_slab',
-             save_message = None):
+             save_message = None, samples = 2000):
 
 
     """
@@ -437,10 +436,10 @@ def run_MCMC(X, y, sigma2, vs, weights, zs, p0, multi_dim,
     assert prior == 'gauss' or 'spike_n_slab', "unrecognized prior"
 
     if prior == 'gauss':
-        ww, zz, pp, vv, ss = Test.gibbs_chain(2000, est_p0 = False,
+        ww, zz, pp, vv, ss = Test.gibbs_chain(samples, est_p0 = False,
                                               censored = censored)
     elif prior == 'spike_n_slab':
-        ww, zz, pp, vv, ss = Test.gibbs_chain(2000, censored = censored)
+        ww, zz, pp, vv, ss = Test.gibbs_chain(samples, censored = censored)
 
     time = datetime.now().strftime(r"%y%m%d_%H%M")
     title = "run_at_time_{}.csv".format(time)
