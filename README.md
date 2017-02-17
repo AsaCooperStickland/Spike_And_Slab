@@ -73,18 +73,22 @@ expensive in general, you might want the Gaussian process as a good interpolatio
 
 And we can look at histograms for some of our variables to see if the model can learn them from the data: 
 
-![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/errors.png)
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/p0.png)
 
-p0
+Above are 9000 samples from the posterior for p0, or the percentage of features the model thinks are relevant (for 80 data points). 
+The real value is 2/5, but this has a quite broad mode at around
+0.6. I found this was typical: when I used one feature it landed on about 0.4. Perhaps it takes a lot of evidence to get p0 to be a low number. 
 
-![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/errors.png)
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/sigbig.png)
 
-sigma2
+This is 9000 samples from the posterior for error (again 80 data points). The distribution is pretty much centred on 0.0001 (We added Gaussian 
+noise with variance 0.0001 to get the training data.) like we expect. 
 
-![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/errors.png)
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/big_weights.png)
 
-Since error is strictly positive I'll just plot it on a log scale for clarity. 
-log(sigma2)
+Finally here's something showing the spike and slab prior in action: These are the weights for x1 against y0, which has a true value of 0.1, indicated by the 
+vertical red line. For a low number of data points, the posterior is very wide (note the scales changing on the x axis), and there's a significant number 
+of samples on exactly zero. As we get more data, the posterior shifts towards 0.1, stops hitting zero, and gets narrower. Pretty cool, huh? 
 
 You can explore what the posterior looks like for certain weights, or for zs by looking in 
 

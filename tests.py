@@ -397,6 +397,7 @@ hist(p0[1000:], bins = 'blocks', histtype='stepfilled', normed=True,
 plt.ylabel('$\mathrm{Frequency}$', fontsize = 20)
 plt.xlabel('$p_0$', fontsize = 20)
 plt.tight_layout()
+plt.savefig('figures/p0.png')
 plt.show()
 
 sig2 = np.genfromtxt('spike_slab_results\s_n_s_sigma2\weights20.csv')
@@ -406,23 +407,53 @@ hist(sig2[1000:], bins = 'freedman', histtype='stepfilled', normed=True,
             color='b', alpha = 0.7)
 plt.ylabel('$\mathrm{Frequency}$', fontsize = 20)
 plt.xlabel('$\sigma^2$', fontsize = 20)
-plt.plot([0.0001, 0.0001], [0.0, 20000.0], 'm--', linewidth = 3.0,
+plt.plot([0.0001, 0.0001], [0.0, 25000.0], 'r--', linewidth = 5.0,
          alpha = 0.6, label = 'True Value')
 plt.legend(loc='upper right', shadow=True)
-plt.ylim(0.0, 20000.0)
+plt.ylim(0.0, 25000.0)
 plt.tight_layout()
+plt.savefig('figures/sig2.png')
 plt.show()
 
 plt.figure()
 hist(np.log(sig2[1000:]), bins = 'freedman', histtype='stepfilled', normed=True,
             color='b', alpha = 0.7)
-plt.plot([np.log(0.0001), np.log(0.0001)], [0.0, 100.0], 'm--', linewidth = 3.0,
+plt.plot([np.log(0.0001), np.log(0.0001)], [0.0, 100.0], 'r--', linewidth = 5.0,
          alpha = 0.6, label = 'True Value')
 plt.legend(loc='upper right', shadow=True)
 plt.ylabel('$\mathrm{Frequency}$', fontsize = 20)
 plt.xlabel('$\mathrm{log}(\sigma^2)$', fontsize = 20)
-plt.ylim(0.0, 2.5)
+plt.ylim(0.0, 2.8)
 plt.tight_layout()
+plt.savefig('figures/logsig2.png')
+plt.show()
+
+w3= np.genfromtxt('spike_slab_results\s_n_s_weights\weights3.csv')
+w5= np.genfromtxt('spike_slab_results\s_n_s_weights\weights5.csv')
+w11= np.genfromtxt('spike_slab_results\s_n_s_weights\weights11.csv')
+w20 = np.genfromtxt('spike_slab_results\s_n_s_weights\weights20.csv')
+
+weights = [w3[1000:, 1], w5[1000:, 1], w11[1000:, 1], w20[1000:, 1]]
+titles = ['12', '20', '44', '80']
+lims = [60.0, 40.0, 30.0, 180.0]
+lims = iter(lims)
+
+plt.figure()
+f, axes = plt.subplots(2, 2)
+for weight, title, ax in zip(weights, titles, axes.flat):
+    ax.hist(weight, bins = 'fd', histtype='stepfilled', normed=True,
+            color='b', alpha = 0.7)
+    ax.set_title('$' + title + '$' + ' ' + '$\mathrm{data}$' + ' '
+                 + '$\mathrm{points}$', fontsize = 16)
+    ax.plot([0.1, 0.1], [0.0, 300.0], 'r--', linewidth = 5.0,
+         alpha = 0.6)
+    ax.set_ylim(0, next(lims))
+f.text(0.5, 0.02, '$\mathrm{Weights}$', ha='center', va='center',
+       fontsize = 20)
+f.text(0.02, 0.5, '$\mathrm{Frequency}$', ha='center',
+         va='center', rotation='vertical', fontsize = 20)
+plt.tight_layout()
+plt.savefig('figures/weights.png')
 plt.show()
     
 
