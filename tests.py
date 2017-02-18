@@ -402,6 +402,7 @@ plt.show()
 p0 = np.genfromtxt('spike_slab_results\s_n_s_p0\weights20.csv')
 
 # Histogram with the  'Bayesian blocks' method for bin sizes from AstroPy
+print("If you get a weird warning from AstroPy, don't worry it seems fine.")
 plt.figure()
 hist(p0[1000:], bins = 'blocks', histtype='stepfilled', normed=True,
             color='b', alpha = 0.7)
@@ -443,12 +444,12 @@ plt.show()
 # Get posterior for weights of various numbers of data points.
 w3 = np.genfromtxt('spike_slab_results\s_n_s_weights\weights3.csv')
 w5 = np.genfromtxt('spike_slab_results\s_n_s_weights\weights5.csv')
-w11 = np.genfromtxt('spike_slab_results\s_n_s_weights\weights11.csv')
+w10 = np.genfromtxt('spike_slab_results\s_n_s_weights\weights10.csv')
 w20 = np.genfromtxt('spike_slab_results\s_n_s_weights\weights20.csv')
 
-weights = [w3[1000:, 1], w5[1000:, 1], w11[1000:, 1], w20[1000:, 1]]
-titles = ['12', '20', '44', '80']
-lims = [60.0, 40.0, 30.0, 180.0]
+weights = [w3[1000:, 1], w5[1000:, 1], w10[1000:, 1], w20[1000:, 1]]
+titles = ['12', '20', '40', '80']
+lims = [60.0, 40.0, 115.0, 180.0]
 lims = iter(lims)
 
 # Plot histograms of the four weights on a big figure.
