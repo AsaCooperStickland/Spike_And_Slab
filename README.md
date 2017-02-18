@@ -4,11 +4,12 @@ Python code for my masters project.
 
     spike_n_slab.py
 
-Uses Gibbs sampling to get sample from posterior with 'spike and slab priors'. 
+Uses Gibbs sampling to get sample from posterior with 'spike and slab', or Gaussian priors. 
 
     tests.py
 
-Does some data visualisation
+Does some data visualisation on a toy dataset, interpolating between errors with Gaussian processes and showing off some posteriors. Shows how spike and slab
+is probably the best model when you have a particular situation of multiple target variables that depend on the same features: further outlined below. 
 
 # Intro
 

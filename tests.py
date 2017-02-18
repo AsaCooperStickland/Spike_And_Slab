@@ -311,6 +311,10 @@ def fit_GP(xs, ys, std):
     y_minus = y - std
     return y, y_plus, y_minus, x
 
+#-----------------------#
+# Visualisation Section #
+#-----------------------#
+# Set this 'True' to generate new data and weights. 
 new_data = False
 
 if new_data == True:
@@ -324,20 +328,24 @@ else:
     errors = pickle.load( open( load_name, "rb" ) )
     mle_std, sns_std, gauss_std, mle_mean, sns_mean, gauss_mean, versus = errors
 
+# Get data from our class which compares models. 
 mle_out = versus.mean_mle_out
 sns_out = versus.mean_sns_out
 gauss_out = versus.mean_gauss_out
 xs = versus.sizes
 
+# Fit Gaussian process to the three models, make it return standard deviation.
 y, y_plus, y_minus, x = fit_GP(xs, mle_out, mle_std)
 y2, y2_plus, y2_minus, x = fit_GP(xs, sns_out, sns_std)
 y3, y3_plus, y3_minus, x = fit_GP(xs, gauss_out, gauss_std)
 
 xs = np.array(xs)
 x = np.array(x)
+# Times by four since there are four target variables.
 xs *= 4
 x *= 4
 
+# Plot the three models for different numbers of data points.
 plt.figure()
 plt.scatter(xs, mle_out + mle_mean, s= 30, alpha=0.3,
                     edgecolor='black', facecolor='b', linewidth=0.75)
@@ -362,6 +370,7 @@ plt.tight_layout()
 plt.savefig('figures/errors.png')
 plt.show()
 
+# Plot just spike and slab and MLE, and plot Gaussian processes for those two. 
 plt.figure()
 plt.scatter(xs, mle_out + mle_mean, s= 30, alpha=0.3,
                     edgecolor='black', facecolor='b', linewidth=0.75)
@@ -389,8 +398,10 @@ plt.xscale('log', basex=2)
 plt.savefig('figures/errors_gp.png')
 plt.show()
 
+# Get posterior for p0 (posterior percentage of relevant features)
 p0 = np.genfromtxt('spike_slab_results\s_n_s_p0\weights20.csv')
 
+# Histogram with the  'Bayesian blocks' method for bin sizes from AstroPy
 plt.figure()
 hist(p0[1000:], bins = 'blocks', histtype='stepfilled', normed=True,
             color='b', alpha = 0.7)
@@ -400,6 +411,7 @@ plt.tight_layout()
 plt.savefig('figures/p0.png')
 plt.show()
 
+# Get posterior for error 
 sig2 = np.genfromtxt('spike_slab_results\s_n_s_sigma2\weights20.csv')
 
 plt.figure()
@@ -428,9 +440,10 @@ plt.tight_layout()
 plt.savefig('figures/logsig2.png')
 plt.show()
 
-w3= np.genfromtxt('spike_slab_results\s_n_s_weights\weights3.csv')
-w5= np.genfromtxt('spike_slab_results\s_n_s_weights\weights5.csv')
-w11= np.genfromtxt('spike_slab_results\s_n_s_weights\weights11.csv')
+# Get posterior for weights of various numbers of data points.
+w3 = np.genfromtxt('spike_slab_results\s_n_s_weights\weights3.csv')
+w5 = np.genfromtxt('spike_slab_results\s_n_s_weights\weights5.csv')
+w11 = np.genfromtxt('spike_slab_results\s_n_s_weights\weights11.csv')
 w20 = np.genfromtxt('spike_slab_results\s_n_s_weights\weights20.csv')
 
 weights = [w3[1000:, 1], w5[1000:, 1], w11[1000:, 1], w20[1000:, 1]]
@@ -438,6 +451,7 @@ titles = ['12', '20', '44', '80']
 lims = [60.0, 40.0, 30.0, 180.0]
 lims = iter(lims)
 
+# Plot histograms of the four weights on a big figure.
 plt.figure()
 f, axes = plt.subplots(2, 2)
 for weight, title, ax in zip(weights, titles, axes.flat):
