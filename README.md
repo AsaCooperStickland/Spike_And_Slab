@@ -1,11 +1,16 @@
 # Spike and Slab model 
 
-Python code for my masters project. I've got a dataset of peptoids (a peptide mimicking molecule), and how effective they are against a range of different 
+Python code for my masters project. 
+
+# Intro
+
+I've got a dataset of peptoids (a peptide mimicking molecule), and how effective they are against a range of different 
 microbes. I'm using linear regression with sparsity-inducing priors (spike and slab ones to be precise) to figure out which features of the peptoids make them
 good drugs. We want to use information from the microbes where we have a lot of data to help prediction in microbes where we don't have much data. And we want
 an overall 'relevance score' for the features that's independent of a particular microbe. One way to get those things is to use 'Spike and slab' priors. 
 
-A more technical/complete description can be found in these papers by Hernández-Lobato et. al, but I'll give a basic intro. Let's start with linear regression:
+A more technical/complete description can be found in [these](http://www.jmlr.org/papers/volume14/hernandez-lobato13a/hernandez-lobato13a.pdf) 
+[papers](http://link.springer.com/article/10.1007/s10994-014-5475-7) by Hernández-Lobato et. al, but I'll give a basic intro. Let's start with linear regression:
 
 ![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/linreg.gif)
 
@@ -33,6 +38,15 @@ We group together the weights for different microbes, for example charge for E.c
 In this way we can 'share information' between microbes. If one microbe has loads of data points and it's obvious a certain feature isn't useful for prediction, 
 that feature won't get used on the other microbes too. And the posterior for z will give us the probability that a certain feature is relevant across every 
 microbe, not just one. 
+
+The way we formulate this in linear regression is to have a setup that looks like this: 
+
+![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/formulation.gif)
+
+The 1,2,...,m here are differnt target variables, so in my project they're the different microbes. In traditional linear regression this would mean the weights 
+against each microbe would be completely independent (even if they were all weights for e.g. charge). But spike and slab allows them to be grouped together. 
+Another thing you can do here is if you have some domain expertise and think it's likely that, say, number of red balloons, and number of green balloons will
+jointly relevant or irrelevant to party enjoyment, you can put that into your prior. But I concentrate on the case where you have multiple target variables. 
 
 This fancy prior means our posterior distribution is completely intractable, so we have to use MCMC (if you aren't familiar, [this](https://www.youtube.com/watch?v=Em6mQQy4wYA&t=2734s) 
 is a great intro by Iain Murray of Edinburgh Uni.), specifically Gibbs sampling, since the conditional distributions of our variables are tractable. Details are 
