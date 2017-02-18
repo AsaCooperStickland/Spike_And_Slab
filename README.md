@@ -2,6 +2,14 @@
 
 Python code for my masters project. 
 
+    spike_n_slab.py
+
+Uses Gibbs sampling to get sample from posterior with 'spike and slab priors'. 
+
+    tests.py
+
+Does some data visualisation
+
 # Intro
 
 I've got a dataset of peptoids (a peptide mimicking molecule), and how effective they are against a range of different 
@@ -43,7 +51,7 @@ The way we formulate this in linear regression is to have a setup that looks lik
 
 ![Five Adam runs](https://github.com/AsaCooperStickland/Spike_And_Slab/blob/master/figures/formulation.gif)
 
-The 1,2,...,m here are differnt target variables, so in my project they're the different microbes. In traditional linear regression this would mean the weights 
+The 1,2,...,m here are different target variables, so in my project they're the different microbes. In traditional linear regression this would mean the weights 
 against each microbe would be completely independent (even if they were all weights for e.g. charge). But spike and slab allows them to be grouped together. 
 Another thing you can do here is if you have some domain expertise and think it's likely that, say, number of red balloons, and number of green balloons will
 jointly relevant or irrelevant to party enjoyment, you can put that into your prior. But I concentrate on the case where you have multiple target variables. 
