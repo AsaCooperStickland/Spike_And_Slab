@@ -6,7 +6,7 @@ import pickle
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 mpl.rcParams['font.family'] = 'serif'
-label_size = 16
+label_size = 7.0
 mpl.rcParams['xtick.labelsize'] = label_size 
 mpl.rcParams['ytick.labelsize'] = label_size 
 from numpy import genfromtxt
@@ -463,6 +463,10 @@ for weight, title, ax in zip(weights, titles, axes.flat):
     ax.plot([0.1, 0.1], [0.0, 300.0], 'r--', linewidth = 5.0,
          alpha = 0.6)
     ax.set_ylim(0, next(lims))
+    for tick in ax.xaxis.get_major_ticks():
+                tick.label.set_fontsize(14)
+    for tick in ax.yaxis.get_major_ticks():
+                tick.label.set_fontsize(14) 
 f.text(0.5, 0.02, '$\mathrm{Weights}$', ha='center', va='center',
        fontsize = 20)
 f.text(0.02, 0.5, '$\mathrm{Frequency}$', ha='center',
