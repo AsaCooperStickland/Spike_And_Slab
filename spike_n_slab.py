@@ -1,4 +1,4 @@
-from __future__ import division
+mfrom __future__ import division
 from copy import deepcopy
 import numpy as np
 from numpy import matrix
@@ -74,18 +74,6 @@ def multi_truncnorm(mean, sigma2, cens_value):
     
     samples = np.zeros(len(mean))
     for i in range(len(mean)):
-        samples[i] = truncnorm.rvs((cens_value - mean[i])/sigma2[i]**0.5,
-                                   200.0, loc = mean[i], scale = sigma2[i]**0.5)
-    return samples
-
-def multi_truncnorm2(mean, sigma2, cens_value):
-    
-    """
-    Returns vector of truncnormal samples, but they can't be correlated
-    """
-    
-    samples = np.zeros(len(mean))
-    for i in range(len(mean)):
         samples[i] = truncnorm.rvs((cens_value - mean[i])/sigma2**0.5,
                                    200.0, loc = mean[i], scale = sigma2**0.5)
     return samples
@@ -96,6 +84,8 @@ class Spike_N_Slab(object):
     """
     Parameters of a linear regression model with spike-and-slab priors modified
     so that a group of variables is different to zero, rather than just one.
+    See appendix of https://link.springer.com/article/10.1007/s10994-014-5475-7
+    for more details- I use parameter names based on what they use.
     """
 
     
@@ -370,7 +360,7 @@ class Spike_N_Slab(object):
         for i in range(self.d):
             cens_mean = cens_mean + float(self.w[i])*self.data[self.cens, i]
    
-        self.y[self.cens] = multi_truncnorm2(cens_mean, self.sigma2,
+        self.y[self.cens] = multi_truncnorm(cens_mean, self.sigma2,
                                              self.cens_value)
         return 
     
